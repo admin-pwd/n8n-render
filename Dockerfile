@@ -1,16 +1,16 @@
 FROM n8nio/n8n:latest
 
-# --- GÖMÜLÜ AYARLAR (Render'ı Devre Dışı Bırakıyoruz) ---
+USER root
 
-# 1. Veritabanı Türü
+# --- 1. Python ve Resim İşleme Kütüphanesini (Pillow) Kur ---
+RUN apk add --update python3 py3-pip
+RUN pip3 install Pillow --break-system-packages
+
+# --- 2. Ayarları Sabitle (Render Hatalarını Önler) ---
 ENV DB_TYPE=postgresdb
-
-# 2. SSL Sorununu Çözen Kritik Ayarlar (Burası Çok Önemli)
 ENV DB_POSTGRESDB_SSL=true
 ENV DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
-
-# 3. Port Ayarı
 ENV N8N_PORT=5678
 
-# --- Kullanıcı Yetkisi ---
+# --- 3. Yetkiyi Tekrar Kullanıcıya Ver (Güvenlik) ---
 USER node
